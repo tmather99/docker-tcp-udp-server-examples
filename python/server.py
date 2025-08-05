@@ -1,5 +1,6 @@
 import socket
 import threading
+from datetime import datetime
 
 def udp_server():
     udp_ip = '0.0.0.0'
@@ -33,7 +34,10 @@ def tcp_server():
             data = conn.recv(1024)
             if not data:
                 break
-            conn.sendall(data)  # Echo back the data
+            now = datetime.now()
+            resp_data = f"{now} {data.decode()}"
+            print(resp_data)
+            conn.sendall(resp_data.encode())  # Echo back the data
 
 if __name__ == "__main__":
     udp_thread = threading.Thread(target=udp_server)
