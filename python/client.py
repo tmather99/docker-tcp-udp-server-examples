@@ -6,7 +6,7 @@ def client_program():
     host = socket.gethostname() if len(sys.argv) == 1 else sys.argv[1]    
     port = 5000  # socket server port number
 
-    print(f"TCP client sending port {port}")
+    print(f"TCP client sending port {host}:{port}")
 
     client_socket = socket.socket()  # instantiate
     client_socket.connect((host, port))  # connect to the server
