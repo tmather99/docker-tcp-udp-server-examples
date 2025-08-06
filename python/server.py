@@ -76,11 +76,13 @@ def handle_client(conn, addr):
     print(f"New connection from {addr}")
     while True:
         try:
-            message = conn.recv(1024).decode()
-            if not message:
+            msg = conn.recv(1024).decode()
+            if not msg:
                 break
-            print(f"Message from {addr}: {message}")
-            conn.sendall(message.encode())
+            now = datetime.now()
+            resp_msg = f"{now} {msg}"
+            print(f"Message from {addr}: {msg}")
+            conn.sendall(resp_msg.encode())
         except Exception as e:
             print(f"Error with connection from {addr}: {e}")
             break
