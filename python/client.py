@@ -1,7 +1,9 @@
 import socket
+import sys
 
 def client_program():
-    host = socket.gethostname()  # as both code is running on same pc
+    # use server name or ip if specified else assume current host
+    host = socket.gethostname() if len(sys.argv) == 1 else sys.argv[1]    
     port = 5000  # socket server port number
 
     print(f"TCP client sending port {port}")
