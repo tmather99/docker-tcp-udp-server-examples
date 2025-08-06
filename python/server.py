@@ -53,7 +53,7 @@ def tcp_server():
 
 
 #
-#  TCP server handling multiple concurrent clients
+#  TCP server handling multiple clients concurrently
 #
 def server_program():
     host = socket.gethostname()
@@ -71,7 +71,9 @@ def server_program():
         thread.start()
         print(f"Active connections: {threading.activeCount() - 1}")
 
-
+#
+#  Client thread handler
+#
 def handle_client(conn, addr):
     print(f"New connection from {addr}")
     while True:
