@@ -60,9 +60,9 @@ def http_get_error(url):
 
 
 #
-# python3 .\client.py --protocol tcp --host 10.48.209.50 --port 5000
-# python3 .\client.py --protocol udp --host 10.48.209.50 --port 12345
-# python3 .\client.py --protocol http --host 10.48.209.50 --port 8484 --error none, reset, timeout, disconnect, etc.
+# python3 client.py --protocol tcp --host 10.48.209.50 --port 5000
+# python3 client.py --protocol udp --host 10.48.209.50 --port 12345
+# python3 client.py --protocol http --host 10.48.209.50 --port 8484 --error none, reset, timeout, disconnect, etc.
 #
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TCP and UDP Client')
