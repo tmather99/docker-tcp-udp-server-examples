@@ -1,5 +1,5 @@
 # Build stage for installing dependencies and copying source files
-FROM python:3.9-slim AS builder
+FROM python:3.13.6-slim AS builder
 
 WORKDIR /app
 
@@ -10,7 +10,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . /app/
 
 # Run stage using a smaller base image
-FROM python:3.9-alpine
+FROM python:3.13.6-alpine
 
 WORKDIR /app
 

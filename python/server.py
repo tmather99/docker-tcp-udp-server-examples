@@ -99,35 +99,42 @@ def handle_client(conn, addr):
 class ExceptionSimulatingHandler(http.server.SimpleHTTPRequestHandler):
     def do_GET(self):
         path = self.path.strip("/")
+        
         # Simulate network exceptions based on the URL path
         match path:
-            case "disconnect":
-                self.send_error(500, "Simulated disconnection exception")
-                raise ConnectionError("Simulated disconnection exception")
-            case "timeout":
-                self.send_error(504, "Simulated timeout exception")
-                raise TimeoutError("Simulated timeout exception")
-            case "reset":
-                self.send_error(502, "Simulated network reset exception")
-                raise ConnectionResetError("Simulated network reset exception")
-            case "unavailable":
-                self.send_error(503, "Simulated service unavailable exception")
-                raise ConnectionAbortedError("Simulated service unavailable exception")
-            case "unauthorized":
-                self.send_error(401, "Simulated unauthorized access exception")
-                raise PermissionError("Simulated unauthorized access exception")
-            case "badgateway":
-                self.send_error(502, "Simulated bad gateway exception")
-                raise OSError("Simulated bad gateway exception")
-            case "forbidden":
-                self.send_error(403, "Simulated forbidden access exception")
-                raise PermissionError("Simulated forbidden access exception")
+            case "socketerror":
+                raise socket.error("Simulated generic socket error")
+            case "brokenpipe":
+                raise BrokenPipeError("Simulated broken pipe error")
+            case "connreset":
+                raise ConnectionResetError("Simulated connection reset by peer")
             case "internalerror":
                 self.send_error(500, "Simulated internal server error")
                 raise RuntimeError("Simulated internal server error")
+            case "disconnect":
+                self.send_error(500, "Simulated disconnection exception")
+                raise ConnectionError("Simulated disconnection exception")
+            case "reset":
+                self.send_error(502, "Simulated network reset exception")
+                raise ConnectionResetError("Simulated network reset exception")
+            case "badgateway":
+                self.send_error(502, "Simulated bad gateway exception")
+                raise OSError("Simulated bad gateway exception")
+            case "unavailable":
+                self.send_error(503, "Simulated service unavailable exception")
+                raise ConnectionAbortedError("Simulated service unavailable exception")
+            case "timeout":
+                self.send_error(504, "Simulated timeout exception")
+                raise TimeoutError("Simulated timeout exception")
             case "badrequest":
                 self.send_error(400, "Simulated bad request exception")
                 raise ValueError("Simulated bad request exception")
+            case "unauthorized":
+                self.send_error(401, "Simulated unauthorized access exception")
+                raise PermissionError("Simulated unauthorized access exception")
+            case "forbidden":
+                self.send_error(403, "Simulated forbidden access exception")
+                raise PermissionError("Simulated forbidden access exception")
             case "notfound":
                 self.send_error(404, "Simulated not found exception")
                 raise FileNotFoundError("Simulated not found exception")
