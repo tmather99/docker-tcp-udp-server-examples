@@ -45,7 +45,7 @@ def tcp_client(host, port):
                 break
 
 #
-#  http get network exception
+#  http get network errors from server.py
 #
 def http_get_error(url):
     try:
