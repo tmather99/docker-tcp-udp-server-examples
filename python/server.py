@@ -16,8 +16,10 @@ def udp_server():
 
     while True:
         data, addr = sock.recvfrom(1024)  # buffer size is 1024 bytes
+        now = datetime.now()
+        resp_data = f"{now} {data}".encode()
         print(f"Received message: {data} from {addr}")
-        sock.sendto(data, addr)  # Echo back the data
+        sock.sendto(resp_data, addr)  # Echo back the data
 
 
 #
@@ -43,9 +45,9 @@ def tcp_server():
                 if not data:
                     break
                 now = datetime.now()
-                resp_data = f"{now} {data.decode()}"
+                resp_data = f"{now} {data}"
                 print(resp_data)
-                conn.sendall(resp_data.encode())  # Echo back the data
+                conn.sendall(resp_data)  # Echo back the data
             except Exception as e:
                 print(f"Error with connection from {addr}: {e}")
                 break

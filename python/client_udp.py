@@ -1,22 +1,23 @@
 import socket
 import sys
 
-def client_program():
+def udp_client():
     # use server name or ip if specified else assume current host
     host = socket.gethostname() if len(sys.argv) == 1 else sys.argv[1]    
     # socket server port number
-    port = 5000 if len(sys.argv) == 2 else int(sys.argv[2] )  
+    port = 12345 if len(sys.argv) == 2 else int(sys.argv[2] )  
 
-    print(f"TCP client sending port {host}:{port}")
-
-    client_socket = socket.socket()  # instantiate
-    client_socket.connect((host, port))  # connect to the server
+    # Define the server address and port
+    server_address = (host, port)
+    
+    # Create a UDP socket
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     message = input(" -> ")  # take input
 
     with client_socket:
         while message and message.lower().strip() != 'bye':
             try:
-                client_socket.send(message.encode())  # send message
+                client_socket.sendto(message.encode(), server_address)  # send message
                 data = client_socket.recv(1024).decode()  # receive response
                 print('Received from server: ' + data)  # show in terminal
                 message = input(" -> ")  # again take input
@@ -25,4 +26,4 @@ def client_program():
                 break
 
 if __name__ == '__main__':
-    client_program()
+    udp_client()
