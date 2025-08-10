@@ -78,9 +78,9 @@ if __name__ == '__main__':
     error = args.error
 
     match protocol:
-        case 'tcp':
-            tcp_client(host, port)
-        case 'udp':
-            udp_client(host, port)
         case 'http':
             http_get_error(f'http://{host}:{port}/{error}')
+        case 'udp':
+            udp_client(host, port)
+        case _:
+            tcp_client(host, port)
