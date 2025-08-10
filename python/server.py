@@ -1,3 +1,4 @@
+import http.server
 import socket
 import threading
 from datetime import datetime
@@ -93,17 +94,77 @@ def handle_client(conn, addr):
     conn.close()
 
 #
+# Various HTTP status codes and network exceptions.
+#
+class ExceptionSimulatingHandler(http.server.SimpleHTTPRequestHandler):
+    def do_GET(self):
+        path = self.path.strip("/")
+
+        # Simulate network exceptions based on the URL path
+        if path == "disconnect":
+            self.send_error(500, "Simulated disconnection exception")
+            raise ConnectionError("Simulated disconnection exception")
+        elif path == "timeout":
+            self.send_error(504, "Simulated timeout exception")
+            raise TimeoutError("Simulated timeout exception")
+        elif path == "reset":
+            self.send_error(502, "Simulated network reset exception")
+            raise ConnectionResetError("Simulated network reset exception")
+        elif path == "unavailable":
+            self.send_error(503, "Simulated service unavailable exception")
+            raise ConnectionAbortedError("Simulated service unavailable exception")
+        elif path == "unauthorized":
+            self.send_error(401, "Simulated unauthorized access exception")
+            raise PermissionError("Simulated unauthorized access exception")
+        elif path == "badgateway":
+            self.send_error(502, "Simulated bad gateway exception")
+            raise OSError("Simulated bad gateway exception")
+        elif path == "forbidden":
+            self.send_error(403, "Simulated forbidden access exception")
+            raise PermissionError("Simulated forbidden access exception")
+        elif path == "internalerror":
+            self.send_error(500, "Simulated internal server error")
+            raise RuntimeError("Simulated internal server error")
+        elif path == "badrequest":
+            self.send_error(400, "Simulated bad request exception")
+            raise ValueError("Simulated bad request exception")
+        elif path == "notfound":
+            self.send_error(404, "Simulated not found exception")
+            raise FileNotFoundError("Simulated not found exception")
+        else:
+            # Handle normally if no exception simulation is required
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(b"Hello, World!")
+
+def http_server(server_class=http.server.HTTPServer, handler_class=ExceptionSimulatingHandler):
+    server_address = ('', 8484)
+    httpd = server_class(server_address, handler_class)
+    print("Starting HTTP server on port 8484")
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        httpd.server_close()
+        print("HTTP server closed")       
+
+#
 #  Main thread
 #
 if __name__ == "__main__":
     udp_thread = threading.Thread(target=udp_server)
     tcp_thread = threading.Thread(target=tcp_server)
     srv_thread = threading.Thread(target=server_program)
+    http_thread = threading.Thread(target=http_server)
 
     udp_thread.start()
     tcp_thread.start()
     srv_thread.start()
+    http_thread.start()
 
     udp_thread.join()
     tcp_thread.join()
     srv_thread.join()
+    http_thread.join()
