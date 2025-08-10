@@ -1,5 +1,6 @@
 import socket
 import argparse
+import requests
 
 #
 #  udp client
@@ -44,21 +45,42 @@ def tcp_client(host, port):
                 break
 
 #
+#  http get network exception
+#
+def http_get_error(url):
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            print("GET request successful!")
+            print("Response content:", response.content)
+        else:
+            print(f"GET request failed with status code: {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
+
+
+#
 # python3 .\client.py --protocol tcp --host 10.48.209.50 --port 5000
 # python3 .\client.py --protocol udp --host 10.48.209.50 --port 12345
+# python3 .\client.py --protocol http --host 10.48.209.50 --port 8484 --error none, reset, timeout, disconnect, etc.
 #
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='TCP and UDP Client')
-    parser.add_argument('--protocol', choices=['tcp', 'udp'], default='tcp', required=False)
+    parser.add_argument('--protocol', choices=['tcp', 'udp', 'http'], default='tcp', required=False)
     parser.add_argument('--host', type=str, default='10.48.209.50', required=False)
     parser.add_argument('--port', type=int, default=5000, required=False)
+    parser.add_argument('--error', type=str, default='reset', required=False)
 
     args = parser.parse_args()
     protocol = args.protocol
     host = args.host
     port = args.port
+    error = args.error
 
-    if protocol == 'tcp':
-        tcp_client(host, port)
-    else:
-        udp_client(host, port)
+    match protocol:
+        case 'tcp':
+            tcp_client(host, port)
+        case 'udp':
+            udp_client(host, port)
+        case 'http':
+            http_get_error(f'http://{host}:{port}/{error}')
