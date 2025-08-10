@@ -52,7 +52,7 @@ def http_get_error(url):
         response = requests.get(url)
         if response.status_code == 200:
             print("GET request successful!")
-            print("Response content:", response.content)
+            print("Response content:", response.content.decode())
         else:
             print(f"GET request failed with status code: {response.status_code}")
     except requests.exceptions.RequestException as e:
