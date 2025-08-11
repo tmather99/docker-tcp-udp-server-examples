@@ -47,16 +47,20 @@ def tcp_client(host, port):
 #
 #  http get network errors from server.py
 #
-def http_get_error(url):
-    try:
-        response = requests.get(url)
-        if response.status_code == 200:
-            print("GET request successful!")
-            print("Response content:", response.content.decode())
-        else:
-            print(f"GET request failed with status code: {response.status_code}")
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+def http_get_error(host, port, error):
+    while True:
+        try:
+            if not error: break
+            url = f"http://{host}:{port}/{error}"
+            response = requests.get(url)
+            if response.status_code == 200:
+                print("GET request successful!")
+                print("Response content:", response.content.decode())
+            else:
+                print(f"GET request failed with status code: {response.status_code}")
+            error = input(" -> ")  # take input
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
 
 
 #
@@ -79,7 +83,7 @@ if __name__ == '__main__':
 
     match protocol:
         case 'http':
-            http_get_error(f'http://{host}:{port}/{error}')
+            http_get_error(host, port, error)
         case 'udp':
             udp_client(host, port)
         case _:

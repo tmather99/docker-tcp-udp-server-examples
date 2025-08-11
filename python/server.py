@@ -143,7 +143,10 @@ class ExceptionSimulatingHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
-                self.wfile.write("Hello, World!".encode())
+                now = datetime.now()
+                resp_msg = f"{now} error={path}"
+                print(f"{self.headers}")
+                self.wfile.write(resp_msg.encode())
 
 def http_server(server_class=http.server.HTTPServer, handler_class=ExceptionSimulatingHandler):
     server_address = ('', 8484)
