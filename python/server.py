@@ -4,26 +4,6 @@ import threading
 from datetime import datetime
 
 #
-#  UDP server
-#
-def udp_server():
-    udp_ip = '0.0.0.0'
-    udp_port = 12345
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock.bind((udp_ip, udp_port))
-
-    print(f"UDP server up and listening on port {udp_port}")
-
-    while True:
-        data, addr = sock.recvfrom(1024)  # buffer size is 1024 bytes
-        now = datetime.now()
-        resp_data = f"{now} {data}".encode()
-        print(f"Received message: {data} from {addr}")
-        sock.sendto(resp_data, addr)  # Echo back the data
-
-
-#
 #  TCP server handling multiple clients sequentially 
 #
 def tcp_server():
@@ -164,17 +144,14 @@ def http_server(server_class=http.server.HTTPServer, handler_class=ExceptionSimu
 #  Main thread
 #
 if __name__ == "__main__":
-    udp_thread = threading.Thread(target=udp_server)
     tcp_thread = threading.Thread(target=tcp_server)
     srv_thread = threading.Thread(target=server_program)
     http_thread = threading.Thread(target=http_server)
 
-    udp_thread.start()
     tcp_thread.start()
     srv_thread.start()
     http_thread.start()
 
-    udp_thread.join()
     tcp_thread.join()
     srv_thread.join()
     http_thread.join()

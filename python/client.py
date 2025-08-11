@@ -3,28 +3,6 @@ import argparse
 import requests
 
 #
-#  udp client
-#
-def udp_client(host, port):
-    # Define the server address and port
-    server_address = (host, port)
-    
-    # Create a UDP socket
-    client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    message = input(" -> ")  # take input
-
-    with client_socket:
-        while message and message.lower().strip() != 'bye':
-            try:
-                client_socket.sendto(message.encode(), server_address)  # send message
-                data = client_socket.recv(1024).decode()  # receive response
-                print('Received from server: ' + data)  # show in terminal
-                message = input(" -> ")  # again take input
-            except Exception as e:
-                print(f"Error with connection to {host}:{port} -- {e}")
-                break
-
-#
 #  tcp client
 #
 def tcp_client(host, port):
@@ -65,12 +43,11 @@ def http_get_error(host, port, error):
 
 #
 # python3 client.py --protocol tcp --host 10.48.209.50 --port 5000
-# python3 client.py --protocol udp --host 10.48.209.50 --port 12345
 # python3 client.py --protocol http --host 10.48.209.50 --port 8484 --error none, reset, timeout, disconnect, etc.
 #
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='TCP and UDP Client')
-    parser.add_argument('--protocol', choices=['tcp', 'udp', 'http'], default='tcp', required=False)
+    parser = argparse.ArgumentParser(description='TCP and HTTP Client')
+    parser.add_argument('--protocol', choices=['tcp', 'http'], default='tcp', required=False)
     parser.add_argument('--host', type=str, default='10.48.209.50', required=False)
     parser.add_argument('--port', type=int, default=5000, required=False)
     parser.add_argument('--error', type=str, default='reset', required=False)
@@ -84,7 +61,5 @@ if __name__ == '__main__':
     match protocol:
         case 'http':
             http_get_error(host, port, error)
-        case 'udp':
-            udp_client(host, port)
         case _:
             tcp_client(host, port)
