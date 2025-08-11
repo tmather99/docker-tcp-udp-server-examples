@@ -4,41 +4,9 @@ import threading
 from datetime import datetime
 
 #
-#  TCP server handling multiple clients sequentially 
-#
-def tcp_server():
-    tcp_ip = '0.0.0.0'
-    tcp_port = 54321
-
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    sock.bind((tcp_ip, tcp_port))
-    sock.listen()
-
-    print(f"TCP server up and listening on port {tcp_port}")
-
-    while True:
-        conn, addr = sock.accept()
-        print(f"Connection from {addr}")
-
-        while True:
-            try:
-                data = conn.recv(1024)
-                if not data:
-                    break
-                now = datetime.now()
-                resp_data = f"{now} {data}"
-                print(resp_data)
-                conn.sendall(resp_data)  # Echo back the data
-            except Exception as e:
-                print(f"Error with connection from {addr}: {e}")
-                break
-        conn.close()  # close the connection
-
-
-#
 #  TCP server handling multiple clients concurrently
 #
-def server_program():
+def tcp_server():
     host = socket.gethostname()
     port = 5000
 
@@ -145,13 +113,10 @@ def http_server(server_class=http.server.HTTPServer, handler_class=ExceptionSimu
 #
 if __name__ == "__main__":
     tcp_thread = threading.Thread(target=tcp_server)
-    srv_thread = threading.Thread(target=server_program)
     http_thread = threading.Thread(target=http_server)
 
     tcp_thread.start()
-    srv_thread.start()
     http_thread.start()
 
     tcp_thread.join()
-    srv_thread.join()
     http_thread.join()
