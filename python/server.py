@@ -72,7 +72,7 @@ def server_program():
         conn, addr = server_socket.accept()
         thread = threading.Thread(target=handle_client, args=(conn, addr))
         thread.start()
-        print(f"Active connections: {threading.activeCount() - 1}")
+        print(f"Active connections: {threading.active_count() - 1}")
 
 #
 #  Client thread handler
@@ -144,7 +144,7 @@ class ExceptionSimulatingHandler(http.server.SimpleHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 now = datetime.now()
-                resp_msg = f"{now} error={path}"
+                resp_msg = f"{now} error={path}\r\n"
                 print(f"{self.headers}")
                 self.wfile.write(resp_msg.encode())
 
